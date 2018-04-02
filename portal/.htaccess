@@ -1,0 +1,38 @@
+# 404 Error Document
+ErrorDocument 404 /content/system/404.php
+
+# Start Rewriting
+RewriteEngine on
+
+# Remove Trailing Slash
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)/$ /$1 [L,R=301]
+
+# Redirect to HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Vanity URL 1
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^/]+)$ index.php?variable1=$1 [L]
+
+# Vanity URL 2
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^/]+)/([^/]+)$ index.php?variable1=$1&variable2=$2 [L]
+
+# Vanity URL 3
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^/]+)/([^/]+)/([^/]+)$ index.php?variable1=$1&variable2=$2&variable3=$3 [L]
+
+# Vanity URL 4
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^/]+)/([^/]+)/([^/]+)/([^/]+)$ index.php?variable1=$1&variable2=$2&variable3=$3&variable4=$4 [L]
+
+# Vanity URL 5
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)$ index.php?variable1=$1&variable2=$2&variable3=$3&variable4=$4&variable5=$5 [L]
