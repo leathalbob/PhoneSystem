@@ -1,0 +1,46 @@
+qmodule.exports = function(grunt) {
+
+  // Project configuration.
+  grunt.initConfig({
+    pkg: grunt.file.readJSON('package.json'),
+    uglify: {
+      options: {
+        banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
+	mangle: false
+      },
+      build: {
+	expand: true,
+	cwd: '../javascripts/src/',
+	dest: '../javascripts/build/',
+        src: ['*.js','!*.min.js'],
+	ext: '.min.js'
+     }
+    }
+//    imagemin: {
+//      png: {
+//        options: {
+//          optimizationLevel: 1
+//        },
+//	files: [
+//          {
+//            expand: true,
+ //           cwd: '/home/reviveip/www/portal/content/grunt_files',
+  //          dest: '../images/build/',
+   //         src: '../images/src/',
+    //        ext: '.png'
+//          }
+//        ]
+//      }
+//    }
+
+  });
+	
+
+  // Load plugins
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+//  grunt.loadNpmTasks('grunt-contrib-imagemin');
+
+  // Register all the tasks
+ // grunt.registerTask('imagemin', ['imagemin']);
+  grunt.registerTask('default', ['uglify']);  
+};

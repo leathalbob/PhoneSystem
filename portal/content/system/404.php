@@ -7,24 +7,37 @@
  */
 
 echo '
-<body id="load404" class="be-splash-screen fade in" style="opacity:0">
-	<div class="be-wrapper be-error be-error-404">
-	  <div class="be-content">
-		<div class="main-content container-fluid">
-		  <div class="error-container">
-			<div class="error-number">404</div>
-			<div class="error-description" style="text-transform:uppercase;">The page you are looking for may have been moved or removed</div>
-			<div class="error-goback-text">Would you like to go home?</div>
-			<div class="error-goback-button"><a href="https://portal.addable.net" class="btn btn-xl btn-primary">Let\'s go home</a></div>
-			<div class="splash-footer">&copy; '.date('Y').' '.COMPANY_NAME.'</div>
-		  </div>
-		</div>
-	  </div>
-	</div>
+<body class="bg-accpunt-pages">
+	<section>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-12 text-center">
 	
-	<script type="text/javascript">
-		window.onload = function() {
-			document.getElementById("load404").style.opacity = "1";
-		}
-	</script>
-';
+					<div class="wrapper-page">
+						<div class="account-pages">
+							<div class="account-box">
+	
+								<div class="account-logo-box">
+									<h2 class="text-uppercase text-center">
+										<a href="/"class="text-success">
+											<span><img src="/content/theme/images/logo_dark.png" alt="" height="30"></span>
+										</a>
+									</h2>
+								</div>
+	
+								<div class="account-content">
+									<h1 class="text-error m-t-0">404</h1>
+									<h2 class="text-uppercase text-error m-t-20" style="font-size:30px">Page Not Found</h2>
+									<p class="text-muted m-t-30">This page was not found. Either the page doesn\'t exist or the link is incorrect. Please try again later.</p>
+	
+									<a class="btn btn-md btn-block btn-primary waves-effect waves-light m-t-20" href="/">Return Home</a>
+								</div>
+							</div>
+						</div>
+	
+					</div>
+	
+				</div>
+			</div>
+		</div>
+	  </section>';

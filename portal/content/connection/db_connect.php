@@ -1,8 +1,8 @@
 <?php
 define('DOCROOT','');
 define('COMPANY_NAME','Phone Desk');
-define('GLOBAL_DOMAIN_NAME','ltcomms.com');
-define('LOCAL_DOMAIN_NAME','portal.ltcomms.com');
+define('GLOBAL_DOMAIN_NAME','reviveip.com');
+define('LOCAL_DOMAIN_NAME','portal.reviveip.com');
 
 $twi_location = $_SERVER['DOCUMENT_ROOT'].'/content/twi_int/twi_api/Twilio/autoload.php';
 if(file_exists($twi_location)){
@@ -37,9 +37,9 @@ class ADDABLE{
 
 	private function ConnectionDetails(){
 		$this->HOSTNAME      = 'localhost';
-		$this->DATABASE_NAME = 'ltcomms_twi_db';
-		$this->DATABASE_USER = 'ltcomms_twi_usr';
-		$this->DATABASE_PASS = '0Zu%9+#rThu6';
+		$this->DATABASE_NAME = 'reviveip_twidb';
+		$this->DATABASE_USER = 'reviveip_twiusr';
+		$this->DATABASE_PASS = 'F#LRvAk5sm~IB+C2.';
 	}
 
 	public function logging($message){
@@ -50,10 +50,9 @@ class ADDABLE{
 		$fopen = file_put_contents($file,$filecontent);
 	}
 
-	public function QUERY($data)
-    {
+	public function QUERY($data){
         $this->ConnectionDetails();
-        try {
+        try{
             $db = new PDO('mysql:host=' . $this->HOSTNAME . ';dbname=' . $this->DATABASE_NAME, $this->DATABASE_USER, $this->DATABASE_PASS);
             $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -74,10 +73,20 @@ class ADDABLE{
 
             $db = NULL;
             return $return_array;
-        } catch (PDOException $e) {
+        } catch (PDOException $e){
             return $e->getMessage();
         }
     }
+	/*
+	PROCEDURE STATEMENT
+	$aq2 = $aq->QUERY(
+		array(
+			'query' => 'CALL select_accounts(:usersId)',
+			'returnArray' => array('account_name'),
+			'replacementArray' => array('usersId' => '1')
+		)
+	);
+	*/
 
 	public function hardCode($action, $string, $type = 0){
 		$output 		= false;
@@ -183,8 +192,7 @@ class ACCOUNT_FUNCTION extends ADDABLE{
 		));
 
 		$activationCode = $this->randomValue(30);
-		$valLink = 'http://'.$_SERVER['SERVER_NAME'].'/register/activation/'.base64_encode($registerFields['usersEmail']).'/'.$activationCode;
-
+		$valLink = 'https://'.$_SERVER['SERVER_NAME'].'/register/activation/'.base64_encode($registerFields['usersEmail']).'/'.$activationCode;
 		$email_data = array(
 			'TO' => $registerFields['usersEmail'],
 			'SUBJECT' => COMPANY_NAME.' Email Verification',
@@ -196,7 +204,7 @@ class ACCOUNT_FUNCTION extends ADDABLE{
 				</tr>
 				<tr>
 					<td width="40px">&nbsp;</td>
-					<td style="text-align:center; font-size:50px; text-transform:uppercase;">'.COMPANY_NAME.'</td>
+					<td style="text-align:center; font-size:40px; text-transform:uppercase;">'.COMPANY_NAME.'</td>
 					<td width="40px">&nbsp;</td>
 				</tr>
 				<tr>
@@ -206,6 +214,9 @@ class ACCOUNT_FUNCTION extends ADDABLE{
 					<td width="40px">&nbsp;</td>
 					<td style="text-align:center">Please click this link to verify your email account with the company '.COMPANY_NAME.'.</td>
 					<td width="40px">&nbsp;</td>
+				</tr>
+				<tr>
+					<td colspan="3" height="10px">&nbsp;</td>
 				</tr>
 				<tr>
 					<td width="40px">&nbsp;</td>
@@ -219,7 +230,7 @@ class ACCOUNT_FUNCTION extends ADDABLE{
 			',
 			'PLAIN_BODY' => 'Please click this link to verify your email account with the company '.COMPANY_NAME.'. '.$valLink,
 
-			'BCC' => array('thendy@addable.co.uk','lstevens@addable.co.uk'),
+			'BCC' => array('admin@addable.net'),
 			'FROM' => 'no-reply@'.GLOBAL_DOMAIN_NAME
 		);
 
@@ -228,30 +239,33 @@ class ACCOUNT_FUNCTION extends ADDABLE{
 		if(count($users['users_id']) < 1){
 
 			/* USERS DO NOT EXIST */
-			$resellerAccount = 0;
+			$usersReseller = 0;
 			if($registerFields['resellerAccount'] === true){
-				$resellerAccount = 1;
+				$usersReseller = 1;
 			}
 
 			$this->QUERY(array(
 				'query' => '
 					INSERT INTO users (
 						users_email,
+						users_name,
 						users_password,
-						users_account_type,
+						users_reseller,
 						users_activation_code,
 						users_activation_timestamp
 					) VALUES (
 						:usersEmail,
+						:usersFullName,
 						:usersPassword,
-						:usersAccountType,
+						:usersReseller,
 						:usersActivationCode,
 						:usersActivationTimestamp
 					)',
 					'replacementArray' => array(
 						'usersEmail' => $registerFields['usersEmail'],
+						'usersFullName' => $registerFields['usersFullName'],
 						'usersPassword' => password_hash($registerFields['usersPassword'],PASSWORD_BCRYPT),
-						'usersAccountType' => $resellerAccount,
+						'usersReseller' => $usersReseller,
 						'usersActivationCode' => $activationCode,
 						'usersActivationTimestamp' => date("Y-m-d H:i:s")
 					)
@@ -310,7 +324,7 @@ class ACCOUNT_FUNCTION extends ADDABLE{
 
 			} else {
 				$activationCode = $this->randomValue(40);
-				$valLink = 'http://'.LOCAL_DOMAIN_NAME.'/login/reset/'.base64_encode($username).'/'.$activationCode;
+				$valLink = 'https://'.LOCAL_DOMAIN_NAME.'/login/reset/'.base64_encode($username).'/'.$activationCode;
 
 				$email_data = array(
 					'TO' => $username,
@@ -323,7 +337,7 @@ class ACCOUNT_FUNCTION extends ADDABLE{
 						</tr>
 						<tr>
 							<td width="40px">&nbsp;</td>
-							<td style="text-align:center; font-size:50px; text-transform:uppercase;">'.COMPANY_NAME.'</td>
+							<td style="text-align:center; font-size:40px; text-transform:uppercase;">'.COMPANY_NAME.'</td>
 							<td width="40px">&nbsp;</td>
 						</tr>
 						<tr>
@@ -338,6 +352,9 @@ class ACCOUNT_FUNCTION extends ADDABLE{
 							<td width="40px">&nbsp;</td>
 							<td style="text-align:center"><a href="'.$valLink.'">'.$valLink.'</a></div></td>
 							<td width="40px">&nbsp;</td>
+						</tr>
+						<tr>
+							<td colspan="3" height="10px">&nbsp;</td>
 						</tr>
 						<tr>
 							<td colspan="3" height="60px">&nbsp;</td>
@@ -379,22 +396,22 @@ class ACCOUNT_FUNCTION extends ADDABLE{
 		));
 
 		if(password_verify($password,$users['users_password'][0])){
-			$cookieKey = $this->hardCode('encrypt', $users['users_id'][0].'-'.rand(111111,999999));
-			$cookieKey2 = $this->hardCode('encrypt', $this->getIpAddress());
+			$sessionKey1 = $this->hardCode('encrypt', $users['users_id'][0].'-'.rand(111111,999999));
+			$sessionKey2 = $this->hardCode('encrypt', $this->getIpAddress());
 
 			$this->QUERY(array(
 				'query' => 'UPDATE users SET 
 					users_ipaddr = "'.$this->getIpAddress().'",
 					users_lastlogin = "'.date('Y-m-d H:i:s').'",
-					users_sessionkey = "'.$cookieKey.'",
-					users_sessionkey2 = "'.$cookieKey2.'"
+					users_sessionkey1 = "'.$sessionKey1.'",
+					users_sessionkey2 = "'.$sessionKey2.'"
 				WHERE users_id = :users_id',
 				'replacementArray' => array('users_id' => $users['users_id'][0]),
 				'returnArray' => array()
 			));
 
-			setcookie('cookieKey1', $cookieKey, $this->COOKIE_EXP, '/', GLOBAL_DOMAIN);
-			setcookie('cookieKey2', $cookieKey2, $this->COOKIE_EXP, '/', GLOBAL_DOMAIN);
+			setcookie('sessionKey1', $sessionKey1, $this->COOKIE_EXP, '/', GLOBAL_DOMAIN_NAME);
+			setcookie('sessionKey2', $sessionKey2, $this->COOKIE_EXP, '/', GLOBAL_DOMAIN_NAME);
 
 			return true;
 		} else {
@@ -407,25 +424,28 @@ class ACCOUNT_FUNCTION extends ADDABLE{
 			'query' => 'UPDATE users SET 
 				users_sessionkey = "", 
 				users_sessionkey2 = ""
-			WHERE users_sessionkey = :sessionKey
+			WHERE users_sessionkey = :sessionKey1
 			AND users_sessionkey2 = :sessionKey2',
 			'replacementArray' => array(
-				'sessionKey' => $_COOKIE['cookieKey1'],
-				'sessionKey2' => $_COOKIE['cookieKey2']
+				'sessionKey1' => $_COOKIE['sessionKey1'],
+				'sessionKey2' => $_COOKIE['sessionKey2']
 			),
 			'returnArray' => array()
 		));
 
-		setcookie('cookieKey1','', $this->COOKIE_EXP, '/', GLOBAL_DOMAIN);
-		setcookie('cookieKey2','', $this->COOKIE_EXP, '/', GLOBAL_DOMAIN);
+		setcookie('sessionKey1','', $this->COOKIE_EXP, '/', GLOBAL_DOMAIN_NAME);
+		setcookie('sessionKey2','', $this->COOKIE_EXP, '/', GLOBAL_DOMAIN_NAME);
 
 	}
 
     public function isLoggedIn(){
 		$users = $this->QUERY(array(
-			'query' => 'SELECT * FROM users WHERE users_acc_sid = :sessionKey AND users_acc_token = :sessionKey2',
+			'query' => 'SELECT * FROM users 
+				WHERE users_sessionkey1 = :sessionKey1 
+				AND users_sessionkey2 = :sessionKey2',
+
 			'replacementArray' => array(
-				'sessionKey' => $_COOKIE['sessionKey'],
+				'sessionKey1' => $_COOKIE['sessionKey1'],
 				'sessionKey2' => $_COOKIE['sessionKey2']
 			),
 			'returnArray' => array('users_id')
@@ -438,6 +458,29 @@ class ACCOUNT_FUNCTION extends ADDABLE{
 		}
 	}
 
+	public function isReseller(){
+		if($this->isLoggedIn() === true){
+			$users = $this->QUERY(array(
+				'query' => 'SELECT * FROM users 
+					WHERE users_sessionkey1 = :sessionKey1 
+					AND users_sessionkey2 = :sessionKey2',
+
+				'replacementArray' => array(
+					'sessionKey1' => $_COOKIE['sessionKey1'],
+					'sessionKey2' => $_COOKIE['sessionKey2']
+				),
+				'returnArray' => array('users_id','users_reseller')
+			));
+
+			if($users['users_reseller'][0] === '1'){
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
 }
 
 $mobile				= 'hidden-md hidden-lg';

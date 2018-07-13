@@ -5,7 +5,8 @@ $return = array();
 $email = $_POST['email'];
 $pass1 = $_POST['pass1'];
 $pass2 = $_POST['pass2'];
-
+$fname = $_POST['fname'];
+$selection = $_POST['selection'];
 
 if(empty($email) || empty($pass1) || empty($pass2)){
 	$return['error_message'] = 'All fields must be completed';
@@ -15,15 +16,26 @@ if(empty($email) || empty($pass1) || empty($pass2)){
 			if(strlen($pass1) > 5){
 
 				$account = new ACCOUNT_FUNCTION();
-				$register = $account->Register(array(
-					'usersEmail' => $email,
-					'usersPassword' => $pass1,
-					'resellerAccount' => true
-				));
+
+				if($selection == 2){
+					$register = $account->Register(array(
+						'usersEmail' => $email,
+						'usersPassword' => $pass1,
+						'resellerAccount' => true,
+						'usersFullName' => $fname
+					));
+				} else {
+					$register = $account->Register(array(
+						'usersEmail' => $email,
+						'usersPassword' => $pass1,
+						'resellerAccount' => false,
+						'usersFullName' => $fname
+					));
+				}
 
 				if($register === 0){
 					$return['error_message'] = 'Email Address is already registered, please choose an alternative 
-					or <a href="http://'.LOCAL_DOMAIN_NAME.'/login">Click Here</a> to login';
+					or <a href="https://'.LOCALDOMAIN_NAME.'/login">Click Here</a> to login';
 				} else if($register === 2){
 					$return['error_message'] = 'Email Address is already registered however the account has not been activated.<br/><br/>
 					The activation email has been resent.';
@@ -41,7 +53,7 @@ if(empty($email) || empty($pass1) || empty($pass2)){
 }
 
 if(strlen($return['error_message']) > 0){
-	echo json_encode(array('status' => 2,'error_message' => $return['error_message']));
+	echo json_encode(array('status' => 2,'error_message' => $return['error_message'],'a'=>$email));
 } else {
 	echo json_encode(array('status' => 1));
 }

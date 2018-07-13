@@ -1,32 +1,38 @@
 <?php
 /* JAVASCRIPT */
 echo '
-<script src="/content/libs/jquery/jquery.min.js" type="text/javascript"></script>
-<script src="/content/libs/perfect-scrollbar/js/perfect-scrollbar.jquery.min.js" type="text/javascript"></script>
-<script src="/content/javascripts/dashboard-main.js" type="text/javascript"></script>
-<script src="/content/libs/bootstrap/dist/js/bootstrap.min.js" type="text/javascript"></script>
-<script src="/content/libs/jquery-flot/jquery.flot.js" type="text/javascript"></script>
-<script src="/content/libs/jquery-flot/jquery.flot.pie.js" type="text/javascript"></script>
-<script src="/content/libs/jquery-flot/jquery.flot.resize.js" type="text/javascript"></script>
-<script src="/content/libs/jquery-flot/plugins/jquery.flot.orderBars.js" type="text/javascript"></script>
-<script src="/content/libs/jquery-flot/plugins/curvedLines.js" type="text/javascript"></script>
-<script src="/content/libs/jquery.sparkline/jquery.sparkline.min.js" type="text/javascript"></script>
-<script src="/content/libs/countup/countUp.min.js" type="text/javascript"></script>
-<script src="/content/libs/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
-<script src="/content/libs/jqvmap/jquery.vmap.min.js" type="text/javascript"></script>
-<script src="/content/libs/jqvmap/maps/jquery.vmap.world.js" type="text/javascript"></script>
-<script src="/content/javascripts/app-dashboard.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-  $(document).ready(function(){
-	//initialize the javascript
-	App.init();
-	App.dashboard();
-  
-  });
+<script>
+	var resizefunc = [];
 </script>
 
-<script type="text/javascript" src="/content/javascripts/general.js"></script>
+<script src="/content/theme/js/jquery.min.js"></script>
+<script src="/content/theme/js/tether.min.js"></script>
+<script src="/content/theme/js/bootstrap.min.js"></script>
+<script src="/content/theme/js/metisMenu.min.js"></script>
+<script src="/content/theme/js/waves.js"></script>
+<script src="/content/theme/js/jquery.slimscroll.js"></script>
 
-<script type="text/javascript" defer> $(document).ready(function(){ '.$page_specific_javascript.' }); </script>
-';
+<!-- Counter js  -->
+<script src="/content/theme/plugins/waypoints/jquery.waypoints.min.js"></script>
+<script src="/content/theme/plugins/counterup/jquery.counterup.min.js"></script>
+
+<!--C3 & D3 Chart-->
+<script src="/content/theme/plugins/c3/c3.min.js"></script>
+<script src="/content/theme/plugins/d3/d3.min.js"></script>
+
+<!-- Dashboard init -->
+<script src="/content/theme/pages/jquery.dashboard.js"></script>
+
+<!-- Parsley js -->
+<script type="text/javascript" src="/content/theme/plugins/parsleyjs/parsley.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("form").parsley();
+	});
+</script>
+
+<!-- App js -->
+<script src="/content/theme/js/jquery.core.js"></script>
+<script src="/content/theme/js/jquery.app.js"></script>
+
+<script type="text/javascript" src="/content/javascripts/general.js"></script>';

@@ -5,95 +5,132 @@ $dec_variable3 = $addable->hardCode('decrypt',$variable3);
 
 switch($variable2){
 	case 'reset':
-
 		$login_fields = '
-		<form id="preset_form">
-			<span class="splash-title xs-pb-20"></span>
-			<div class="form-group">
-				<input type="email" name="email" required="" value="" placeholder="E-mail" autocomplete="off" class="form-control">
-				<div id="password_reset_status_panel">UNKNOWN ERROR</div>
+		<div class="account-logo-box">
+			<h2 class="text-uppercase text-center">
+				<a href="/" class="text-success">
+					<span><img src="/content/theme/images/logo_dark.png" alt="" height="30"></span>
+				</a>
+			</h2>
+			<h5 class="text-uppercase font-bold m-b-5 m-t-40">Password Reset</h5>
+		</div>
+		<div class="account-content">
+			<form class="form-horizontal" action="#">
+
+				<div class="form-group m-b-10 row">
+					<div class="col-12">
+						<input class="form-control" type="email" id="emailaddress" required="" placeholder="Email Address..">
+					</div>
+				</div>
+
+				<div class="form-group row m-b-30"><div class="col-12">
+				<!-- SPACING DIV -->
+				</div></div>
+
+				<div class="form-group row text-center m-t-10">
+					<div class="col-12">
+						<button class="btn btn-md btn-block btn-primary waves-effect waves-light" type="submit">Sign In</button>
+					</div>
+				</div>
+
+			</form>
+
+			<div class="row m-t-30 m-b-0">
+				<div class="col-sm-12 text-center">
+					<p class="text-muted m-b-0">Dont have an account? <a href="https://www.reviveip.com" class="text-dark m-l-5"><b>Sign Up</b></a></p>
+				</div>
 			</div>
-			
-			<div class="form-group xs-pt-10">
-				<button type="button" data-preset-submission="" class="btn btn-block btn-primary btn-xl">Reset Password</button>
-			</div>
-			
-			<div class="form-group xs-pt-10" style="text-align:center">
-				<a href="http://'.LOCAL_DOMAIN_NAME.'/login">Switch to Login</a>
-			</div>
-		</form>';
+		</div>';
 
 		break;
 
-	/*
-		$login_fields = '
-		<form id="login_form">
-			<span class="splash-title xs-pb-20"></span>
-			<div class="form-group">
-				<input type="email" name="email" required="" value="' .$addable->hardCode('decrypt',$variable4).'" placeholder="E-mail" autocomplete="off" class="form-control">
-			</div>
-			
-			<div class="form-group signup-password">
-				<input id="password" type="password" placeholder="Password" name="password"  class="form-control">
-				<div id="login_status_panel">UNKNOWN ERROR</div>
-			</div>
-			
-			<div class="form-group xs-pt-10">
-				<button type="button" data-login-submission="" class="btn btn-block btn-primary btn-xl">Login</button>
-			</div>
-			
-			<div class="form-group xs-pt-10" style="text-align:center">
-				<a href="http://'.LOCAL_DOMAIN_NAME.'/login/reset">Forgot Password?</a>
-			</div>
-		</form>';
-		break;*/
 	case '':
 		$login_fields = '
-		<form id="login_form">
-			<span class="splash-title xs-pb-20"></span>
-			<div class="form-group">
-				<input type="email" name="email" required="" value="' .$addable->hardCode('decrypt',$variable4).'" placeholder="E-mail" autocomplete="off" class="form-control">
+		<div class="account-logo-box">
+			<h2 class="text-uppercase text-center">
+				<a href="/" class="text-success">
+					<span><img src="/content/theme/images/logo_dark.png" alt="" height="30"></span>
+				</a>
+			</h2>
+			<h5 class="text-uppercase font-bold m-b-5 m-t-40">Sign In</h5>
+		</div>
+		<div class="account-content">
+			
+			<div class="form-horizontal" id="login_form">
+				<div class="form-group m-b-10 row">
+					<div class="col-12">
+						<input class="form-control" type="email" name="email" required="" placeholder="Email Address..">
+					</div>
+				</div>
+
+				<div class="form-group row m-b-10">
+					<div class="col-12">						
+						<input class="form-control" type="password" name="password" required="" placeholder="Password..">
+						<a href="/login/reset" class="text-muted pull-right"><small>Forgot your password?</small></a>
+					</div>
+				</div>
+
+				<div id="login_status_panel"></div>
+
+				<div class="form-group row text-center m-t-10">
+					<div class="col-12">
+						<button data-login-submission="" class="btn btn-md btn-block btn-primary waves-effect waves-light" type="submit">Sign In</button>
+					</div>
+				</div>
 			</div>
 			
-			<div class="form-group signup-password">
-				<input id="password" type="password" placeholder="Password" name="password"  class="form-control">
-				<div id="login_status_panel">UNKNOWN ERROR</div>
+			<div class="row m-t-30 m-b-0">
+				<div class="col-sm-12 text-center">
+					<p class="text-muted m-b-0">Dont have an account? <a href="https://'.GLOBAL_DOMAIN_NAME.'" class="text-dark m-l-5"><b>Sign Up</b></a></p>
+				</div>
 			</div>
-			
-			<div class="form-group xs-pt-10">
-				<button type="button" data-login-submission="" class="btn btn-block btn-primary btn-xl">Login</button>
-			</div>
-			
-			<div class="form-group xs-pt-10" style="text-align:center">
-				<a href="http://'.LOCAL_DOMAIN_NAME.'/login/reset">Forgot Password?</a>
-			</div>
-		</form>';
+		</div>';
 
 		break;
-
 	default:
 		include_once(DOCROOT.'content/system/404.php');
 }
 
 if(!empty($login_fields)){
+
 echo '
-	<body class="be-splash-screen">
-	<div class="be-wrapper be-login be-signup">
-		<div class="be-content">
-			<div class="main-content container-fluid">
-				<div class="splash-container sign-up">
-					<div class="panel panel-default panel-border-color panel-border-color-primary">
-						<div class="panel-heading">
-							<img src="/content/images/theme/logo-xx.png" alt="logo" width="102" height="27" class="logo-img">
+<body class="bg-accpunt-pages">
+<section>
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="wrapper-page">
+
+					<div class="account-pages">
+						<div class="account-box">
+						'.$login_fields.'							
 						</div>
-						
-						<div class="panel-body">
-							'.$login_fields.'
-						</div>               
 					</div>
-					<div class="splash-footer">&copy; '.date('Y').' '.COMPANY_NAME.'</div>
+
 				</div>
 			</div>
 		</div>
-	</div>';
+	</div>
+</section>';
+
 }
+
+/*
+TODO: CREATE SOCIAL MEDIA OAUTH
+<div class="row">
+	<div class="col-sm-12">
+		<div class="text-center">
+			<button type="button" class="btn m-r-5 btn-facebook waves-effect waves-light">
+				<i class="fa fa-facebook"></i>
+			</button>
+			<button type="button" class="btn m-r-5 btn-googleplus waves-effect waves-light">
+				<i class="fa fa-google"></i>
+			</button>
+			<button type="button" class="btn m-r-5 btn-twitter waves-effect waves-light">
+				<i class="fa fa-twitter"></i>
+			</button>
+		</div>
+	</div>
+</div>
+*/
+
