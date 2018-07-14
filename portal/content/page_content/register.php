@@ -1,4 +1,3 @@
-
 <?php
 
 $addable = new ADDABLE();

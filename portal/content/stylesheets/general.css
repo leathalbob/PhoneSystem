@@ -43,6 +43,13 @@
     margin-top:30px;
 }
 
+/* DASHBOARD */
+.metismenu li.disabled a{
+    background-color:#343c49 !important;
+    color: rgba(255, 255, 255, 0.6) !important;
+    cursor:default !important;
+}
+
 
 #sip_dump{
     background-color:#CCC;

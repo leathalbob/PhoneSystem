@@ -2,21 +2,9 @@
 require_once('content/connection/db_connect.php');
 
 $account = new ACCOUNT_FUNCTION;
-if($variable1 == 'logmein'){
-	$account->login('lewisstevens1@gmail.com','davemira');
 
-	header('Location: /logmein2');
-
-} else if($variable1 == 'logmein2'){
-	if($account->isLoggedIn() === true){
-		echo '<h2 style="text-align:center"><br/><br/>You are logged in.</h2>	
-		<h5 style="text-align:center">SessionKey: ['.$_COOKIE['sessionKey1'].'] - SessionKey2: ['.$_COOKIE['sessionKey2'].']</h5>
-		<a href="/logmein" style="text-align:center; width:100%; float:left">Reload</a>';
-	} else {
-		echo '<h2 style="text-align:center"><br/><br/>You are not logged in.</h2>
-		<h5 style="text-align:center">SessionKey: ['.$_COOKIE['sessionKey1'].'] - SessionKey2: ['.$_COOKIE['sessionKey2'].']</h5>
-		<a href="/logmein" style="text-align:center; width:100%; float:left">Reload</a>';
-	}
+if($variable1 === 'logout'){
+	 $account->logOut();
 }
 
 echo '
@@ -29,10 +17,6 @@ echo '
 
 echo '
 </head>';
-
-if($variable1 == 'logmein' || $variable1 == 'logmein2'){
-	exit;
-}
 
 if($account->isLoggedIn() === true){
 

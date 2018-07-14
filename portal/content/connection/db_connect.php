@@ -481,6 +481,22 @@ class ACCOUNT_FUNCTION extends ADDABLE{
 			return false;
 		}
 	}
+
+	public function getAllFromSessionKey($input = array()){
+		$users = $this->QUERY(array(
+			'query' => 'SELECT * FROM users 
+				WHERE users_sessionkey1 = :sessionKey1 
+				AND users_sessionkey2 = :sessionKey2',
+
+			'replacementArray' => array(
+				'sessionKey1' => $_COOKIE['sessionKey1'],
+				'sessionKey2' => $_COOKIE['sessionKey2']
+			),
+			'returnArray' => $input
+		));
+
+		return $users;
+	}
 }
 
 $mobile				= 'hidden-md hidden-lg';

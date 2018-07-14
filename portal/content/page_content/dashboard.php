@@ -1,21 +1,21 @@
 <?php
+$addable = new ADDABLE();
+
+$currentUser = $addable->QUERY(array(
+	'query' => 'SELECT * FROM users 
+		WHERE users_sessionkey1 = :sessionKey1 
+		AND users_sessionkey2 = :sessionKey2',
+	'replacementArray' => array(
+		'sessionKey1' => $_COOKIE['sessionKey1'],
+		'sessionKey2' => $_COOKIE['sessionKey2']
+	),
+	'returnArray' => array('users_id','users_name')
+));
 
 echo '<div id="wrapper">';
 
 include_once($_SERVER['DOCUMENT_ROOT'].'/content/page_content/topbar.php');
 include_once($_SERVER['DOCUMENT_ROOT'].'/content/page_content/sidebar.php');
-
-/*$users = $addable->QUERY(array(
-	'query' => 'SELECT *
-		FROM users
-		WHERE users_email = :usersEmail
-		AND users_activation_code = :usersActivationCode',
-	'replacementArray' => array('usersEmail' => base64_decode($variable3), 'usersActivationCode' => $variable4),
-	'returnArray' => array('users_id','users_activation_timestamp','users_activation_completed')
-));*/
-
-
-
 
 echo '
 <div class="content-page">

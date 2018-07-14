@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: lewis
- * Date: 13/07/2018
- * Time: 21:05
- */
 
 echo '
 <div class="row">
@@ -13,105 +7,93 @@ echo '
 			<h4 class="page-title float-left">Dashboard</h4>
 
 			<ol class="breadcrumb float-right">
-				<li class="breadcrumb-item"><a href="#">Adminox</a></li>
-				<li class="breadcrumb-item"><a href="#">Dashboard</a></li>
-				<li class="breadcrumb-item active">Dashboard 1</li>
+				<li class="breadcrumb-item"><a href="/">ReviveIP</a></li>
+				<li class="breadcrumb-item active">Customers</li>
 			</ol>
 
 			<div class="clearfix"></div>
 		</div>
 	</div>
-</div>';
+</div>
 
-/*
-
-			<div class="row">
-				<div class="col-lg-3 col-md-6">
-					<div class="card-box widget-box-two widget-two-custom">
-						<i class="mdi mdi-currency-usd widget-two-icon"></i>
-						<div class="wigdet-two-content">
-							<p class="m-0 text-uppercase font-bold font-secondary text-overflow" title="Statistics">Total Revenue</p>
-							<h2 class="font-600"><span><i class="mdi mdi-arrow-up"></i></span> <span data-plugin="counterup">65841</span></h2>
-							<p class="m-0">Jan - Apr 2017</p>
-						</div>
-					</div>
-				</div>
-
-				<div class="col-lg-3 col-md-6">
-					<div class="card-box widget-box-two widget-two-custom">
-						<i class="mdi mdi-account-multiple widget-two-icon"></i>
-						<div class="wigdet-two-content">
-							<p class="m-0 text-uppercase font-bold font-secondary text-overflow" title="Statistics">Total Unique Visitors</p>
-							<h2 class="font-600"><span><i class="mdi mdi-arrow-up"></i></span> <span data-plugin="counterup">236521</span></h2>
-							<p class="m-0">Jan - Apr 2017</p>
-						</div>
-					</div>
-				</div>
-
-				<div class="col-lg-3 col-md-6">
-					<div class="card-box widget-box-two widget-two-custom">
-						<i class="mdi mdi-crown widget-two-icon"></i>
-						<div class="wigdet-two-content">
-							<p class="m-0 text-uppercase font-bold font-secondary text-overflow" title="Statistics">Number of Transactions</p>
-							<h2 class="font-600"><span><i class="mdi mdi-arrow-up"></i></span> <span data-plugin="counterup">563698</span></h2>
-							<p class="m-0">Jan - Apr 2017</p>
-						</div>
-					</div>
-				</div>
-
-				<div class="col-lg-3 col-md-6">
-					<div class="card-box widget-box-two widget-two-custom">
-						<i class="mdi mdi-auto-fix widget-two-icon"></i>
-						<div class="wigdet-two-content">
-							<p class="m-0 text-uppercase font-bold font-secondary text-overflow" title="Statistics">Conversation Rate</p>
-							<h2 class="font-600"><span><i class="mdi mdi-arrow-up"></i></span> <span data-plugin="counterup">2.07</span>%</h2>
-							<p class="m-0">Jan - Apr 2017</p>
-						</div>
-					</div>
-				</div>
+<div class="row">
+	<div class="col-lg-6">
+		<div class="card-box widget-box-two widget-two-custom">
+			<i class="mdi mdi-account-multiple widget-two-icon"></i>
+			<div class="wigdet-two-content">
+				<p class="m-0 text-uppercase font-bold font-secondary text-overflow" title="Statistics">Total Customers</p>
+				<h2 class="font-600"><span data-plugin="counterup">2521</span></h2>
+				<p class="m-0">&nbsp;</p>
 			</div>
+		</div>
+	</div>
+	<div class="col-lg-6">
+		<div class="card-box widget-box-two widget-two-custom">
+			<i class="mdi mdi-crown widget-two-icon"></i>
+			<div class="wigdet-two-content">
+				<p class="m-0 text-uppercase font-bold font-secondary text-overflow" title="Statistics">Total Phone Lines</p>
+				<h2 class="font-600"><span data-plugin="counterup">236521</span></h2>
+				<p class="m-0">&nbsp;</p>
+			</div>
+		</div>
+	</div>
+</div>
 
-
-			<div class="row">
-				<div class="col-lg-6">
-					<div class="card-box">
-						<h4 class="header-title m-t-0 m-b-30">Total Unique Visitors</h4>
-
-						<div class="widget-chart text-center">
-							<div id="donut-chart" style="height: 270px;"></div>
-
-							<div class="row text-center m-t-30">
-								<div class="col-6">
-									<h3 data-plugin="counterup">1,507</h3>
-									<p class="text-muted m-b-5">Visitors Male</p>
-								</div>
-								<div class="col-6">
-									<h3 data-plugin="counterup">854</h3>
-									<p class="text-muted m-b-5">Visitors Female</p>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="col-lg-6">
-					<div class="card-box">
-						<h4 class="header-title m-t-0 m-b-30">Number of Transactions</h4>
-
-						<div class="widget-chart text-center">
-							<div id="pie-chart" style="height: 270px;"></div>
-
-							<div class="row text-center m-t-30">
-								<div class="col-6">
-									<h3 data-plugin="counterup">2,854</h3>
-									<p class="text-muted m-b-5">Payment Done</p>
-								</div>
-								<div class="col-6">
-									<h3 data-plugin="counterup">22</h3>
-									<p class="text-muted m-b-5">Payment Due</p>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div> */
+<div class="row">
+	<div class="col-lg-12">
+		<div class="card-box">
+			<h4 class="m-t-0 header-title"><b>Unpaid Invoices</b></h4>
+			<p class="text-muted font-14 m-b-20">
+				A list of customers with outstanding invoices.
+			</p>
+	
+			<div class="table-responsive">
+				<table class="table table-hover m-0 table-actions-bar">
+					<thead>
+						<th style="text-decoration:underline">Customer Name</th>
+						<th style="text-decoration:underline">Due Date</th>
+						<th style="text-decoration:underline">Invoice Amount</th>
+						<th  style="text-decoration:underline; width:90px; text-align:center">Action</th>
+					</thead>
+					<tbody>
+						<tr>
+							<td>
+								Fake Customer
+							</td>
+		
+							<td>
+								<i class="mdi mdi-clock text-danger"></i> 13/07/2018
+							</td>
+		
+							<td>
+								<span style="padding-right:2px;">&pound;</span>3265
+							</td>
+		
+							<td style="text-align:center">
+								<a href="#" class="table-action-btn"><i class="mdi mdi-eye"></i></a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Fake Customer 2
+							</td>
+		
+							<td>
+								<i class="mdi mdi-clock text-warning"></i> '.date('d/m/Y',strtotime('+5 days', time())).'
+							</td>
+		
+							<td>
+								<span style="padding-right:2px;">&pound;</span>3265
+							</td>
+		
+							<td style="text-align:center">
+								<a href="#" class="table-action-btn"><i class="mdi mdi-eye"></i></a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+';
