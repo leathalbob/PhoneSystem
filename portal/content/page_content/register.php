@@ -171,6 +171,9 @@ if($variable2 == 'reseller'){
 				'returnArray' => array('users_id')
 			));
 
+			$sipAccount = new SIP_FUNCTIONS;
+			$sipAccount->CREATE_SIP_ACCOUNT($users2['users_id'][0]);
+
 			$status_text = '
 			<h1 class="text-error">SUCCESS</h1>
 			<h2 class="text-uppercase text-error m-t-30" style="font-size:22px; line-height:1.25">YOUR ACCOUNT HAS BEEN ACTIVATED</h2>

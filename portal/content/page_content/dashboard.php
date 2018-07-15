@@ -28,6 +28,10 @@ echo '
 					include_once(DOCROOT.'content/page_content/dashboard_content/reseller/dashboard_content_customers.php');
 					break;
 
+				case 'customer':
+					include_once(DOCROOT.'content/page_content/dashboard_content/reseller/dashboard_content_customer.php');
+					break;
+
 				default:
 					include_once(DOCROOT.'content/page_content/dashboard_content/reseller/dashboard_content_default.php');
 			}

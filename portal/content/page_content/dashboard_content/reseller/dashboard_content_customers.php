@@ -77,8 +77,8 @@ echo '
 					</div>
 					<div class="col-xs-12 col-sm-4">
 						<div class="m-t-20 m-b-20">
-							<h3 class="m-b-10 text-danger">250</h3>
-							<p class="text-uppercase m-b-5 font-13 font-600">Maybe Overdue Invoices</p>
+							<h3 class="m-b-10 text-danger">25000</h3>
+							<p class="text-uppercase m-b-5 font-13 font-600">Overdue Invoices</p>
 						</div>
 					</div>
 				</div>

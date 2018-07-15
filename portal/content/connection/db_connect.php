@@ -7,6 +7,7 @@ define('LOCAL_DOMAIN_NAME','portal.reviveip.com');
 $twi_location = $_SERVER['DOCUMENT_ROOT'].'/content/twi_int/twi_api/Twilio/autoload.php';
 if(file_exists($twi_location)){
 	require($twi_location);
+	require($_SERVER['DOCUMENT_ROOT'].'/content/includes/sip_functions.php');
 } else {
 	die('ERROR: COULD NOT FIND TWI AUTOLOADER');
 }

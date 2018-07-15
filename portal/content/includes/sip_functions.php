@@ -17,95 +17,58 @@ class SIP_FUNCTIONS extends ADDABLE{
 		$return = array();
 		$client = new Client($this->TWI_SID, $this->TWI_TOKEN);
 		foreach ($client->api->accounts->read() as $account) {
-			$return[] = array(
-				'AccountId' => $account->sid,
-				'AccountName' => $account->friendlyName,
-				'AccountStatus' => $account->status,
-				'AccountParent' => $account->ownerAccountSid,
-				'AccountType' => $account->type,
-				'AccountAuthToken' => $account->authToken,
-				'AccountDateCreated' => $account->dateCreated,
-				'AccountDateUpdated' => $account->dateUpdated
-			);
-		}
-		return $return;
-
-	}
-
-	public function CREATE_SIP_ACCOUNT($subAccountName = null){
-		if(!empty($subAccountName)){
-			$client = new Client($this->TWI_SID, $this->TWI_TOKEN);
-			$account = $client->api->accounts->create(array(
-				'FriendlyName' => $subAccountName,
-			));
-
-			// Acc Disabled
-			$account_status = 0;
-			if($account->status == 'active'){
-				// Acc Active
-				$account_status = 1;
-			} else if($account->status == 'suspended'){
-				// Acc Suspended
-				$account_status = 2;
-			}
-
-			$account_ownerAccountSid = $account->ownerAccountSid;
-			if($account->sid == $account->ownerAccountSid){
-				$account_ownerAccountSid = '';
-			}
-
-			$this->QUERY(array(
-				'query' => '
-					INSERT INTO accounts (
-						account_uid,
-						account_name,
-						account_status,
-						account_parent,
-						account_type,
-						account_auth_token,
-						account_date_created,
-						account_date_updated					
-					) VALUES (
-						:AccountId,
-						:AccountName,
-						:AccountStatus,
-						:AccountParent,
-						:AccountType,
-						:AccountAuthToken,
-						:AccountDateCreated,
-						:AccountDateUpdated
-					)',
-				'replacementArray' => array(
+			if($account->sid != 'AC224aa9a347959fc6471cf8e7b81d3e98'){
+				$return[] = array(
 					'AccountId' => $account->sid,
 					'AccountName' => $account->friendlyName,
-					'AccountStatus' => $account_status,
-					'AccountParent' => $account_ownerAccountSid,
-					'AccountType' => $account->type,
+					'AccountStatus' => $account->status,
+					'AccountParent' => $account->ownerAccountSid,
 					'AccountAuthToken' => $account->authToken,
-					'AccountDateCreated' => $account->dateCreated->date,
-					'AccountDateUpdated' => $account->dateUpdated->date
-
-				),
-				'returnArray' => array()
-			));
-
-			return true;
-		} else {
-			return false;
+					'AccountDateCreated' => $account->dateCreated,
+					'AccountDateUpdated' => $account->dateUpdated
+				);
+			}
 		}
+		return $return;
 	}
 
-	public function SYNC_SIP_ACCOUNTS(){
+	public function RETURN_ACTIVE_SIP_ACCOUNTS(){
 		$return = array();
 		$client = new Client($this->TWI_SID, $this->TWI_TOKEN);
-		foreach ($client->api->accounts->read() as $account){
-			$account_count = $this->QUERY(array(
-				'query' => 'SELECT * FROM accounts WHERE account_uid = :AccountId',
-				'replacementArray' => array('AccountId' => $account->sid),
-				'returnArray' => array('account_uid')
+		foreach ($client->api->accounts->read() as $account) {
+			if($account->sid != 'AC224aa9a347959fc6471cf8e7b81d3e98' && $account->status == 'active'){
+				$return[] = array(
+					'AccountId' => $account->sid,
+					'AccountName' => $account->friendlyName,
+					'AccountParent' => $account->ownerAccountSid,
+					'AccountAuthToken' => $account->authToken,
+					'AccountDateCreated' => $account->dateCreated,
+					'AccountDateUpdated' => $account->dateUpdated
+				);
+			}
+		}
+		return $return;
+	}
+
+	public function CREATE_SIP_ACCOUNT($companyId){
+		if(!empty($companyId)){
+			$company = $this->QUERY(array(
+				'query' => '
+					SELECT *
+					FROM company
+					WHERE company_id = :CompanyId',
+				'replacementArray' => array(
+					'CompanyId' => $companyId
+				),
+				'returnArray' => array('company_id','company_name','company_sip_id')
 			));
 
-			if(count($account_count) < 1){
+			if(empty($company['company_sip_id'][0])){
+				$client = new Client($this->TWI_SID, $this->TWI_TOKEN);
+				$account = $client->api->accounts->create(array(
+					'FriendlyName' => $company['company_name'][0],
+				));
+
 				// Acc Disabled
 				$account_status = 0;
 				if($account->status == 'active'){
@@ -116,47 +79,35 @@ class SIP_FUNCTIONS extends ADDABLE{
 					$account_status = 2;
 				}
 
-				$account_ownerAccountSid = $account->ownerAccountSid;
-				if($account->sid == $account->ownerAccountSid){
-					$account_ownerAccountSid = '';
-				}
-
 				$this->QUERY(array(
 					'query' => '
-						INSERT INTO accounts (
-							account_uid,
-							account_name,
-							account_status,
-							account_parent,
-							account_type,
-							account_auth_token,
-							account_date_created,
-							account_date_updated					
-						) VALUES (
-							:AccountId,
-							:AccountName,
-							:AccountStatus,
-							:AccountParent,
-							:AccountType,
-							:AccountAuthToken,
-							:AccountDateCreated,
-							:AccountDateUpdated
-						)',
+						UPDATE company 
+						SET	
+							company_sip_id = :AccountSipId,
+							company_sip_status = :AccountStatus,
+							company_sip_authtoken = :AccountAuthToken,
+							company_sip_created_timestamp = :AccountDateCreated,
+							company_sip_updated_timestamp = :AccountDateUpdated
+						WHERE 
+							company_id = :CompanyId',
 					'replacementArray' => array(
-						'AccountId' => $account->sid,
-						'AccountName' => $account->friendlyName,
+						'AccountSipId' => $account->sid,
 						'AccountStatus' => $account_status,
-						'AccountParent' => $account_ownerAccountSid,
-						'AccountType' => $account->type,
 						'AccountAuthToken' => $account->authToken,
-						'AccountDateCreated' => $account->dateCreated->date,
-						'AccountDateUpdated' => $account->dateUpdated->date
+						'AccountDateCreated' => $account->dateCreated->format('Y-m-d H:i:s'),
+						'AccountDateUpdated' => $account->dateUpdated->format('Y-m-d H:i:s'),
+						'CompanyId' => $company['company_id'][0]
 					),
 					'returnArray' => array()
 				));
+
+				return true;
+			} else {
+				return false;
 			}
+		} else {
+			return false;
 		}
-		return $return;
 	}
 
 	public function SUSPEND_SIP_ACCOUNT($subAccountId = null){
@@ -167,9 +118,9 @@ class SIP_FUNCTIONS extends ADDABLE{
 			);
 
 			$this->QUERY(array(
-				'query' => 'UPDATE accounts
-					SET	account_status = "2"
-					WHERE account_uid = :AccountId',
+				'query' => 'UPDATE company
+					SET	company_sip_status = "2"
+					WHERE company_id = :AccountId',
 				'replacementArray' => array('AccountId' => $subAccountId),
 				'returnArray' => array()
 			));
@@ -188,9 +139,9 @@ class SIP_FUNCTIONS extends ADDABLE{
 			);
 
 			$this->QUERY(array(
-				'query' => 'UPDATE accounts
-					SET	account_status = "1"
-					WHERE account_uid = :AccountId',
+				'query' => 'UPDATE company
+					SET	company_sip_status = "1"
+					WHERE company_id = :AccountId',
 				'replacementArray' => array('AccountId' => $subAccountId),
 				'returnArray' => array()
 			));
@@ -207,15 +158,15 @@ class SIP_FUNCTIONS extends ADDABLE{
 			$client->api->accounts($subAccountId)->update(
 				array('status' => 'closed')
 			);
-
+/*
 			$this->QUERY(array(
-				'query' => 'UPDATE accounts
-					SET	account_status = "0"
-					WHERE account_uid = :AccountId',
+				'query' => 'UPDATE company
+					SET	company_sip_status = "0"
+					WHERE company_id = :AccountId',
 				'replacementArray' => array('AccountId' => $subAccountId),
 				'returnArray' => array()
 			));
-
+*/
 			return true;
 		} else {
 			return false;
@@ -225,12 +176,12 @@ class SIP_FUNCTIONS extends ADDABLE{
 	public function GET_SIP_ACCOUNT_PHONE_NUMBERS($subAccountId = null){
 		if(!empty($subAccountId)){
 			$user = $this->QUERY(array(
-				'query' => 'SELECT * FROM accounts WHERE account_uid = :AccountId',
+				'query' => 'SELECT * FROM company WHERE company_id = :AccountId',
 				'replacementArray' => array('AccountId' => $subAccountId),
-				'returnArray' => array('account_auth_token')
+				'returnArray' => array('company_sip_authtoken')
 			));
 
-			$client = new Client($subAccountId,$user['account_auth_token'][0]);
+			$client = new Client($subAccountId,$user['company_sip_authtoken'][0]);
 
 			$return = array();
 			foreach ($client->incomingPhoneNumbers->read() as $number) {
@@ -249,12 +200,12 @@ class SIP_FUNCTIONS extends ADDABLE{
 	public function GET_SIP_ACCOUNT_USAGE($subAccountId = null){
 		if(!empty($subAccountId)){
 			$user = $this->QUERY(array(
-				'query' => 'SELECT * FROM accounts WHERE account_uid = :AccountId',
+				'query' => 'SELECT * FROM company WHERE company_id = :AccountId',
 				'replacementArray' => array('AccountId' => $subAccountId),
-				'returnArray' => array('account_auth_token')
+				'returnArray' => array('company_sip_authtoken')
 			));
 
-			$client = new Client("ACfc09fb17c8ec8af2a4d0a27eeb7d747d",$user['account_auth_token'][0]);
+			$client = new Client("a",$user['account_auth_token'][0]);
 
 			$getTotalMinutes = $client->usage->records->thisMonth->read(
 				array(

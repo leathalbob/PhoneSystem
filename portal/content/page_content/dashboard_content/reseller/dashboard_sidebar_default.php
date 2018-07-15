@@ -14,9 +14,6 @@ echo '
 					<a><i class="fi-paper"></i> <span>Billing</span></a>
 				</li>
 				<li class="disabled">
-					<a><i class="fi-paper"></i> <span>Store</span></a>
-				</li>
-				<li class="disabled">
 					<a><i class="fi-paper"></i> <span>Support</span></a>
 				</li>
 			</ul>
