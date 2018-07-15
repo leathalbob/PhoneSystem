@@ -36,7 +36,7 @@ class SIP_FUNCTIONS extends ADDABLE{
 		$return = array();
 		$client = new Client($this->TWI_SID, $this->TWI_TOKEN);
 		foreach ($client->api->accounts->read() as $account) {
-			if($account->sid != 'AC224aa9a347959fc6471cf8e7b81d3e98' && $account->status == 'active'){
+			if($account->sid != $this->TWI_SID && $account->status == 'active'){
 				$return[] = array(
 					'AccountId' => $account->sid,
 					'AccountName' => $account->friendlyName,
