@@ -26,6 +26,10 @@ echo '</title>
 <link href="/content/theme/css/metismenu.min.css" rel="stylesheet" type="text/css" />
 <link href="/content/theme/css/style.css" rel="stylesheet" type="text/css" />
 
+<!-- Datatables -->
+<link href="/content/theme/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css"/>
+<link href="/content/theme/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css"/>
+        
 <!-- General -->
 <link rel="stylesheet" type="text/css" media="all" href="/content/stylesheets/general.css">
 

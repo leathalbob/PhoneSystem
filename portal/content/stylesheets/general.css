@@ -49,7 +49,14 @@
     color: rgba(255, 255, 255, 0.6) !important;
     cursor:default !important;
 }
-
+#datatable th:last-child,#datatable td:last-child{
+    text-align:center;
+    width:10px;
+}
+#datatable_wrapper select{
+    height:34px;
+    cursor:pointer;
+}
 
 #sip_dump{
     background-color:#CCC;
