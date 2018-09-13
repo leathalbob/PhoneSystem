@@ -1,0 +1,28 @@
+# Calling In From Server
+Go To:
+- Phone Numbers
+- Manage Numbers
+- Active Numbers
+- Select Number
+- A call comes in from WebHook of post to:
+https://portal.reviveip.com/content/twi_int/call_comes_in.php
+
+# Calling Out From Server
+Go To:
+- Voice
+- SIP Domains
+- Select the domain its registered to
+- Request URL should be:
+http://www.nethram.com/sandbox/callbackweb/calltwiliosip.php?callerId=+442382146969
+The number is the one which will be sending out and needs to be in E.164 format.
+
+# Sip Credentials
+Don't use IP access control lists as ip could always change just use Credential lists instead.
+
+# Zoiper Setup
+Example Fields:
+Username: 100@addable.sip.us1.twilio.com
+Password: ****
+Domain: addable.sip.us1.twilio.com
+
+Phone number that's calling out must be in E.164 format.

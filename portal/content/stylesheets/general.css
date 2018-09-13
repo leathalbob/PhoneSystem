@@ -57,6 +57,12 @@
     height:34px;
     cursor:pointer;
 }
+#datatable > tbody > tr > td:first-child::before{
+    width:14px;
+    height:15px;
+    line-height:16px;
+    background-color:#64c5b1;
+}
 
 #sip_dump{
     background-color:#CCC;

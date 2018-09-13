@@ -108,10 +108,11 @@ echo '
 						<td>'.$getCustomers['company_main_contact_number'][$i].'</td>
 						<td><span class="label label-success">Active</span></td>
 						<td style="text-align:center">
-							<a href="/dashboard/customer/'.$addable->hardcode('encrypt',$getCustomers['company_id'][$i]).'"><i class="mdi mdi-sync m-r-10 text-muted font-18 vertical-middle" title="Switch to Customer"></i></a>
+							<a href="/dashboard/customer/'.$addable->hardcode('encrypt',$getCustomers['company_id'][$i]).'">
+							    <i class="mdi mdi-account-switch m-r-10 text-muted font-18 vertical-middle" title="Switch to Customer"></i>
+							</a>
 						</td>
 					</tr>';
-
 				}
 
 				echo '

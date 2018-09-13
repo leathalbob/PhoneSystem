@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="addable_phone" uploadOnCheckin="a1ae764a-9152-47a9-b8c9-3d68396d6a24">
+  <component name="PublishConfigData" autoUpload="Always" serverName="addable_phone">
     <serverData>
       <paths name="addable_phone">
         <serverdata>
@@ -10,7 +10,6 @@
         </serverdata>
       </paths>
     </serverData>
-    <option name="myUploadOnCheckinName" value="addable_phone" />
     <option name="myAutoUpload" value="ALWAYS" />
   </component>
 </project>

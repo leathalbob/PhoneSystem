@@ -27,7 +27,6 @@ echo '
 if($account->isLoggedIn() === true){
 
 	switch($variable1){
-
 		case 'terms_and_conditions':
 			include_once(DOCROOT.'content/page_content/terms_and_conditions.php');
 			break;
@@ -38,13 +37,11 @@ if($account->isLoggedIn() === true){
 
 		default:
 			echo '<script type="text/javascript"> window.location.href="/dashboard"; </script>';
-
 	}
 
 } else {
 
 	switch($variable1){
-
 		case 'login':
 			include_once(DOCROOT.'content/page_content/login.php');
 			break;
@@ -55,7 +52,6 @@ if($account->isLoggedIn() === true){
 
 		default:
 			echo '<script type="text/javascript"> window.location.href="/login"; </script>';
-
 	}
 
 }

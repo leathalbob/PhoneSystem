@@ -1,13 +1,13 @@
 <?php
-require_once(DOCROOT.'content/connection/db_connect.php');
-require_once(DOCROOT.'content/includes/sip_functions.php');
+#require_once(DOCROOT.'content/connection/db_connect.php');
+#require_once(DOCROOT.'content/includes/sip_functions.php');
 
 /* ONLY REQUIRED FOR VIEWING */
-require_once(DOCROOT.'content/includes/header.php');
-echo '<div id="sip_dump"><iframe src="/dashboard/content/includes/sip_dump.php"></iframe></div>';
+#require_once(DOCROOT.'content/includes/header.php');
+#echo '<div id="sip_dump"><iframe src="/dashboard/content/includes/sip_dump.php"></iframe></div>';
 
-$sip = new SIP_FUNCTIONS;
-var_dump($sip->GET_SIP_ACCOUNT_USAGE("ACfc09fb17c8ec8af2a4d0a27eeb7d747d"));
+#$sip = new SIP_FUNCTIONS;
+#var_dump($sip->GET_SIP_ACCOUNT_USAGE("ACfc09fb17c8ec8af2a4d0a27eeb7d747d"));
 /*var_dump($sip->RETURN_SIP_ACCOUNTS());
 
 #
@@ -107,3 +107,13 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
         <Say>To speak to a real monkey, press 1.  Press any other key to start over.</Say>
     </Gather>
 </Response>*/
+
+header("content-type: text/xml");
+echo '<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+    <Say>Hello Mr Stranger. I note that you are calling from</Say>
+    <Play>http://demo.twilio.com/hellomonkey/monkey.mp3</Play>
+    <Dial>
+        <Sip>sip:100@addable.sip.us1.twilio.com</Sip>
+    </Dial>
+</Response>';
