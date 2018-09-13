@@ -117,6 +117,24 @@ class ADDABLE{
 		}
 		return $str;
 	}
+	public function randomSimpleValue($stringLength = 20,$maxUpperCapitals = 2){
+		$str = "";
+		$characters = array_merge(range('a','k'), range('m','n'), range('p','z'), range('1','9'));
+		$max = count($characters) - 1;
+		$uCapital = 0;
+
+		for ($i = 0; $i < $stringLength; $i++) {
+			$randInt = mt_rand(0,1);
+			$rand = mt_rand(0, $max);
+			if($randInt === 1 && $uCapital <= $maxUpperCapitals){
+				$str .= strtoupper($characters[$rand]);
+				$uCapital++;
+			} else {
+				$str .= $characters[$rand];
+			}
+		}
+		return $str;
+	}
 
 	public function getIpAddress(){
 		if(!empty($_SERVER['HTTP_CLIENT_IP'])){

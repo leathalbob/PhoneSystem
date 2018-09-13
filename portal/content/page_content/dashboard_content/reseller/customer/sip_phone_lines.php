@@ -21,4 +21,10 @@ $sipAccount->CREATE_SIP_ACCOUNT('1')
 ========================================================
 */
 
-$sipAccount->CREATE_SIP_ACCOUNT('1');
+echo "SIP
+
+";
+
+#echo $sipAccount->CREATE_SIP_ACCOUNT('1');
+#echo $sipAccount->RENAME_SIP_ACCOUNT('1','ttt');
+echo $sipAccount->GET_SIP_ACCOUNT_USAGE('1');

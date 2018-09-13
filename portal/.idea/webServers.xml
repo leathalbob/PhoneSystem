@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="a1ae764a-9152-47a9-b8c9-3d68396d6a24" name="addable_phone" url="https://portal.reviveip.com">
+        <fileTransfer host="addable.net" port="22" rootFolder="/home/reviveip/www/portal" accessType="SFTP">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

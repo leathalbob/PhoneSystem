@@ -13,6 +13,13 @@ class SIP_FUNCTIONS extends ADDABLE{
 		}
 	}
 
+	public function FORMAT_PHONE_NUMBER($phoneNumber = null,$countryCode = "GB"){
+		$client = new Client($this->TWI_SID, $this->TWI_TOKEN);
+		return $client->lookups->v1->phoneNumbers($phoneNumber)
+				   ->fetch(array("countryCode" => $countryCode))
+				   ->nationalFormat;
+	}
+
 	public function RETURN_SIP_ACCOUNTS(){
 		$return = array();
 		$client = new Client($this->TWI_SID, $this->TWI_TOKEN);
@@ -50,7 +57,7 @@ class SIP_FUNCTIONS extends ADDABLE{
 		return $return;
 	}
 
-	public function CREATE_SIP_ACCOUNT($companyId){
+	public function CREATE_SIP_ACCOUNT($companyId = null){
 		if(!empty($companyId)){
 			$company = $this->QUERY(array(
 				'query' => '
@@ -64,10 +71,13 @@ class SIP_FUNCTIONS extends ADDABLE{
 			));
 
 			if(empty($company['company_sip_id'][0])){
+
 				$client = new Client($this->TWI_SID, $this->TWI_TOKEN);
-				$account = $client->api->accounts->create(array(
-					'FriendlyName' => $company['company_name'][0],
-				));
+				$account = $client->api->accounts
+					->create(array(
+						'FriendlyName' =>
+						$company['company_name'][0],
+					));
 
 				// Acc Disabled
 				$account_status = 0;
@@ -79,11 +89,38 @@ class SIP_FUNCTIONS extends ADDABLE{
 					$account_status = 2;
 				}
 
+				$client = new Client($account->sid, $account->authToken);
+				$domain = $client->sip->domains
+					->create(
+						$company['company_name'][0].".addable.sip.twilio.com",
+						array(
+							"friendlyName" => $company['company_name'][0],
+							"auth_type" => "CREDENTIAL_LIST"
+						)
+					);
+
+				$cred = $client->sip->credentialLists
+					->create("SIP Credentials");
+
+				$credUser = 100;
+				$credPass = $this->randomSimpleValue(12);
+				while(!preg_match('/[A-Za-z].*[0-9]|[0-9].*[A-Za-z]/', $credPass)){
+					$credPass = $this->randomSimpleValue(12);
+				}
+
+				$credential = $client
+					->sip
+					->credentialLists($cred->sid)
+					->credentials
+					->create($credUser, $credPass);
+
 				$this->QUERY(array(
 					'query' => '
 						UPDATE company 
 						SET	
 							company_sip_id = :AccountSipId,
+							company_sip_domain_id = :DomainSID,
+							company_sip_credential_id = :CredSID,
 							company_sip_status = :AccountStatus,
 							company_sip_authtoken = :AccountAuthToken,
 							company_sip_created_timestamp = :AccountDateCreated,
@@ -92,10 +129,87 @@ class SIP_FUNCTIONS extends ADDABLE{
 							company_id = :CompanyId',
 					'replacementArray' => array(
 						'AccountSipId' => $account->sid,
+						'DomainSID' => $domain->sid,
+						'CredSID' => $cred->sid,
 						'AccountStatus' => $account_status,
 						'AccountAuthToken' => $account->authToken,
 						'AccountDateCreated' => $account->dateCreated->format('Y-m-d H:i:s'),
 						'AccountDateUpdated' => $account->dateUpdated->format('Y-m-d H:i:s'),
+						'CompanyId' => $company['company_id'][0]
+					),
+					'returnArray' => array()
+				));
+
+				$this->QUERY(array(
+					'query' => '
+						INSERT INTO credential (
+							credential_list_match,
+							credential_user,
+							credential_pass
+						) VALUES (
+							:CredentialMatch,
+							:CredentialUser,
+							:CredentialPass
+						)',
+					'replacementArray' => array(
+						'CredentialMatch' => $cred->sid,
+						'CredentialUser' => $credUser,
+						'CredentialPass' => $credPass
+					),
+					'returnArray' => array()
+				));
+
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+
+	public function RENAME_SIP_ACCOUNT($companyId = null,$newCompanyName = null){
+		if(!empty($companyId)){
+			$company = $this->QUERY(array(
+				'query' => '
+					SELECT *
+					FROM company
+					WHERE company_id = :CompanyId',
+				'replacementArray' => array(
+					'CompanyId' => $companyId
+				),
+				'returnArray' => array('company_id','company_name','company_sip_id','company_sip_authtoken','company_sip_domain_id')
+			));
+
+			if(!empty($company['company_id'][0])){
+
+				$client = new Client($company['company_sip_id'][0], $company['company_sip_authtoken'][0]);
+				$client->api->v2010
+					->accounts($company['company_sip_id'][0])
+					->update(array("FriendlyName" => $newCompanyName));
+
+				$client->sip
+					->domains($company['company_sip_domain_id'][0])
+					->delete();
+
+				$client->sip->domains
+					->create(
+						$newCompanyName.".addable.sip.twilio.com",
+						array(
+							"friendlyName" => $newCompanyName,
+							"auth_type" => "CREDENTIAL_LIST"
+						)
+					);
+
+				$this->QUERY(array(
+					'query' => '
+						UPDATE company 
+						SET	
+							company_name = :CompanyName
+						WHERE 
+							company_id = :CompanyId',
+					'replacementArray' => array(
+						'CompanyName' => $newCompanyName,
 						'CompanyId' => $company['company_id'][0]
 					),
 					'returnArray' => array()
@@ -110,145 +224,197 @@ class SIP_FUNCTIONS extends ADDABLE{
 		}
 	}
 
-	public function SUSPEND_SIP_ACCOUNT($subAccountId = null){
-		if(!empty($subAccountId)){
+	/* Stop calls but we will still be charged for the number */
+	public function SUSPEND_SIP_ACCOUNT($companyId = null,$unsuspend = false){
+		if(!empty($companyId)){
+			$company = $this->QUERY(array(
+				'query' => '
+					SELECT *
+					FROM company
+					WHERE company_id = :CompanyId',
+				'replacementArray' => array(
+					'CompanyId' => $companyId
+				),
+				'returnArray' => array('company_id','company_name','company_sip_id')
+			));
+
 			$client = new Client($this->TWI_SID, $this->TWI_TOKEN);
-			$client->api->accounts($subAccountId)->update(
-				array('status' => 'suspended')
-			);
 
-			$this->QUERY(array(
-				'query' => 'UPDATE company
-					SET	company_sip_status = "2"
-					WHERE company_id = :AccountId',
-				'replacementArray' => array('AccountId' => $subAccountId),
-				'returnArray' => array()
-			));
+			if($unsuspend === true){
+				$client->api->v2010
+						->accounts($company['company_sip_id'][0])
+						->update(array("status" => "active"));
 
-			return true;
-		} else {
-			return false;
-		}
-	}
+				$this->QUERY(array(
+					'query' => 'UPDATE company
+						SET	company_sip_status = "1"
+						WHERE company_id = :AccountId',
+					'replacementArray' => array('AccountId' => $company['company_sip_id'][0]),
+					'returnArray' => array()
+				));
+			} else {
+				$client->api->v2010
+						->accounts($company['company_sip_id'][0])
+						->update(array("status" => "suspended"));
 
-	public function UNSUSPEND_SIP_ACCOUNT($subAccountId = null){
-		if(!empty($subAccountId)){
-			$client = new Client($this->TWI_SID, $this->TWI_TOKEN);
-			$client->api->accounts($subAccountId)->update(
-				array('status' => 'active')
-			);
-
-			$this->QUERY(array(
-				'query' => 'UPDATE company
-					SET	company_sip_status = "1"
-					WHERE company_id = :AccountId',
-				'replacementArray' => array('AccountId' => $subAccountId),
-				'returnArray' => array()
-			));
-
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	public function DELETE_SIP_ACCOUNT($subAccountId = null){
-		if(!empty($subAccountId)){
-			$client = new Client($this->TWI_SID, $this->TWI_TOKEN);
-			$client->api->accounts($subAccountId)->update(
-				array('status' => 'closed')
-			);
-/*
-			$this->QUERY(array(
-				'query' => 'UPDATE company
-					SET	company_sip_status = "0"
-					WHERE company_id = :AccountId',
-				'replacementArray' => array('AccountId' => $subAccountId),
-				'returnArray' => array()
-			));
-*/
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	public function GET_SIP_ACCOUNT_PHONE_NUMBERS($subAccountId = null){
-		if(!empty($subAccountId)){
-			$user = $this->QUERY(array(
-				'query' => 'SELECT * FROM company WHERE company_id = :AccountId',
-				'replacementArray' => array('AccountId' => $subAccountId),
-				'returnArray' => array('company_sip_authtoken')
-			));
-
-			$client = new Client($subAccountId,$user['company_sip_authtoken'][0]);
-
-			$return = array();
-			foreach ($client->incomingPhoneNumbers->read() as $number) {
-				$return[] = array(
-					'sid' => $number->sid,
-					'number' => $number->phoneNumber
-				);
+				$this->QUERY(array(
+					'query' => 'UPDATE company
+						SET	company_sip_status = "2"
+						WHERE company_id = :AccountId',
+					'replacementArray' => array('AccountId' => $company['company_sip_id'][0]),
+					'returnArray' => array()
+				));
 			}
 
-			return $return;
+
+
+			return true;
 		} else {
 			return false;
 		}
 	}
 
-	public function GET_SIP_ACCOUNT_USAGE($subAccountId = null){
-		if(!empty($subAccountId)){
-			$user = $this->QUERY(array(
-				'query' => 'SELECT * FROM company WHERE company_id = :AccountId',
-				'replacementArray' => array('AccountId' => $subAccountId),
-				'returnArray' => array('company_sip_authtoken')
+	public function DELETE_SIP_ACCOUNT($companyId = null){
+		if(!empty($companyId)){
+			$company = $this->QUERY(array(
+				'query' => '
+					SELECT *
+					FROM company
+					WHERE company_id = :CompanyId',
+				'replacementArray' => array(
+					'CompanyId' => $companyId
+				),
+				'returnArray' => array('company_id','company_name','company_sip_id')
 			));
 
-			$client = new Client("a",$user['account_auth_token'][0]);
+			$client = new Client($this->TWI_SID, $this->TWI_TOKEN);
+			$client->api->v2010
+				->accounts($company['company_sip_id'][0])
+				->update(array("status" => "closed"));
 
-			$getTotalMinutes = $client->usage->records->thisMonth->read(
-				array(
-					"category" => "calls"
-				)
-			);
-			$getTotalPrice = $client->usage->records->thisMonth->read(
+			$this->QUERY(array(
+				'query' => 'UPDATE company
+					SET	company_sip_status = "3"
+					WHERE company_id = :AccountId',
+				'replacementArray' => array('AccountId' => $company['company_sip_id'][0]),
+				'returnArray' => array()
+			));
 
-			);
-			/*
-			 * array(
-					"category" => ""
-				)
-			 * */
-			$return = array(
-				'calls' => array(
-					'usage' => '',
-					'usageUnit' => ''
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public function SYNC_SIP_ACCOUNT_PHONE_NUMBERS($companyId = null){
+		if(!empty($companyId)){
+			/* Delete all old records */
+			$this->QUERY(array(
+				'query' => '
+					DELETE FROM line
+					WHERE line_company_match = :CompanyId',
+				'replacementArray' => array(
+					'CompanyId' => $companyId
 				),
-				'totalPrice' => array(
-					'price' => '',
-					'priceUnit' => ''
-				)
-			);
-			foreach ($getTotalPrice as $record) {
-				if($record->category == 'calls'){
-					$return['calls']['usage'] = $record->usage;
-					$return['calls']['usageUnit'] = $record->usageUnit;
-					$return['calls']['usageCount'] = $record->count;
+				'returnArray' => array()
+			));
 
-				} else if($record->category == 'totalprice'){
-					$return['totalPrice']['price'] = $record->price;
-					$return['totalPrice']['priceUnit'] = $record->priceUnit;
+			$company = $this->QUERY(array(
+				'query' => '
+					SELECT *
+					FROM company
+					WHERE company_id = :CompanyId',
+				'replacementArray' => array(
+					'CompanyId' => $companyId
+				),
+				'returnArray' => array('company_id','company_sip_id','company_sip_authtoken')
+			));
 
+			$client = new Client($company['company_sip_id'][0],$company['company_sip_authtoken'][0]);
+
+			if(count($client->incomingPhoneNumbers->read()) > 0){
+				foreach ($client->incomingPhoneNumbers->read() as $number) {
+					echo $this->QUERY(array(
+						'query' => '
+							INSERT INTO line (
+								line.line_company_match,
+								line.line_number_sid,
+								line.line_number
+							) VALUES (
+								:CompanyId,
+								:LineNumberSid,
+								:LineNumber
+							)
+						',
+						'replacementArray' => array(
+							'CompanyId' => $companyId,
+							'LineNumberSid' => $number->sid,
+							'LineNumber' => $number->phoneNumber
+						),
+						'returnArray' => array()
+					));
 				}
 
-				  #$record->priceUnit.'
-
-
-
-
+				return true;
+			} else {
+				return false;
 			}
-var_dump($return);
+		} else {
+			return false;
+		}
+	}
+
+	public function GET_SIP_ACCOUNT_USAGE($companyId = null,$selectedMonth = null){
+		if(!empty($companyId)){
+
+			$company = $this->QUERY(array(
+				'query' => '
+					SELECT *
+					FROM company
+					WHERE company_id = :CompanyId',
+				'replacementArray' => array(
+					'CompanyId' => $companyId
+				),
+				'returnArray' => array('company_id','company_sip_id','company_sip_authtoken')
+			));
+
+			$company = $this->QUERY(array(
+				'query' => '
+					SELECT *
+					FROM company
+					WHERE company_id = :CompanyId',
+				'replacementArray' => array(
+					'CompanyId' => $companyId
+				),
+				'returnArray' => array('company_id','company_sip_id','company_sip_authtoken')
+			));
+
+			if(!empty($selectedMonth)){
+
+			} else {
+				#$client = new Client($company['company_sip_id'][0],$company['company_sip_authtoken'][0]);
+				$client = new Client('AC295b1457694ce6293469f65a3cd8a7a8','7d713e8df7de067c03c7b757a7ac2c7b');
+
+
+foreach ($client->usage->records->thisMonth->read() as $record) {
+    print_r($record->usage);
+}
+
+/*
+ * TODO: GET CALLS TO PRINT OUT SIMILAR TO:
+ * INBOUND - 01985 492125 - £1.05
+ * */
+	/*			$calls = $client->calls->read(array("startTime" => new \DateTime('2018-7')));
+print_r($calls);*/
+			}
+/*
+				foreach ($calls as $record) {
+					print($record);
+				}*/
+
+
+
+
 
 /*
  * phonenumbers-setups

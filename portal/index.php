@@ -5,6 +5,12 @@ $account = new ACCOUNT_FUNCTION;
 
 if($variable1 === 'logout'){
 	 $account->logOut();
+} else if($variable1 === 'call_in'){
+	include_once(DOCROOT.'content/twi_int/call_in.php');
+	exit;
+} else if($variable1 === 'call_out'){
+	include_once(DOCROOT.'content/twi_int/call_out.php');
+	exit;
 }
 
 echo '

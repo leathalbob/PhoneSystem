@@ -1,0 +1,40 @@
+# STEP 1
+-> Go to cpanel go to Software
+-> Module Installers
+-> Select PHP Pecl and click Manage
+-> Select PHP version and select Apply
+-> Go to Install a PHP Pecl and type xdebug then click Install Now.
+
+# STEP 2
+-> Install Chrome xDebug Helper Addon
+
+# STEP 3
+-> Check on phpinfo() then look for the modules location and find the xdebug.so file
+
+# STEP 4
+-> Paste that module location into the currently used php file.
+->
+[Xdebug]
+zend_extension="/opt/cpanel/ea-php70/root/usr/lib64/php/modules/xdebug.so"
+xdebug.remote_enable=1
+xdebug.remote_host=127.0.0.1
+xdebug.remote_port=9000
+
+# STEP 5
+-> Go to putty and put:
+hostname: addable.net
+port: 22
+connection type: ssh
+autologin name: reviveip
+source port: R9000
+destination: localhost:9000
+
+Open this up when you need a connection to debug.
+
+# STEP 6
+-> Set SFTP values to:
+SFTP Host: addable.net
+Port: 22
+Root Path: /home/reviveip/www/portal
+Root Webserver: https://portal.reviveip.com
+Rest of Paths: /
