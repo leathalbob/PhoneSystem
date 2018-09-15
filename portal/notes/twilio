@@ -26,3 +26,14 @@ Password: ****
 Domain: addable.sip.us1.twilio.com
 
 Phone number that's calling out must be in E.164 format.
+
+# Gigaset Setup
+Configure line with settings:
+Authentication Name: 100
+Authentication Password: ****
+Username: 100
+Domain: addable.sip.us1.twilio.com
+Outbound Server Address: addable.sip.us1.twilio.com
+Outbound Proxy Port: 5060
+
+Change Local Settings Country to Other Country until we can work out the rerwriting part of it.

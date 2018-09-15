@@ -393,11 +393,13 @@ class SIP_FUNCTIONS extends ADDABLE{
 
 			} else {
 				#$client = new Client($company['company_sip_id'][0],$company['company_sip_authtoken'][0]);
-				$client = new Client('AC295b1457694ce6293469f65a3cd8a7a8','7d713e8df7de067c03c7b757a7ac2c7b');
+				$client = new Client($this->TWI_SID,$this->TWI_TOKEN);
 
 
-foreach ($client->usage->records->thisMonth->read() as $record) {
-    print_r($record->usage);
+// Loop over the list of transcriptions and echo a property for each one
+foreach ($client->usage->records->lastMonth->read() as $record) {
+    echo $record->description
+    ;
 }
 
 /*

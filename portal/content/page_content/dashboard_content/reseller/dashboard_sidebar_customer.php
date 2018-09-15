@@ -18,10 +18,10 @@ echo '
 					<a href="/dashboard/customer/'.$variable3.'"><i class="fi-paper"></i> <span>Dashboard</span></a>
 				</li>
 				<li>
-					<a href="/dashboard/customer/'.$variable3.'/sip_phone_lines"><i class="fi-paper"></i> <span>Sip Phone Lines</span></a>
+					<a href="/dashboard/customer/'.$variable3.'/sip_phone_lines"><i class="fi-paper"></i> <span>My Phones</span></a>
 				</li>
 				<li>
-					<a href="/dashboard/customer/'.$variable3.'/sip_phone_numbers"><i class="fi-paper"></i> <span>Sip Phone Numbers</span></a>
+					<a href="/dashboard/customer/'.$variable3.'/sip_phone_numbers"><i class="fi-paper"></i> <span>My Phone Numbers</span></a>
 				</li>
 				<li class="disabled">
 					<a><i class="fi-paper"></i> <span>Billing</span></a>
